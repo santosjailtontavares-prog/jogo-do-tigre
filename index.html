@@ -66,12 +66,13 @@
 </head>
 <body>
 
-    <div class="navbar">
-        <a href="home.html" class="logo-text">blaze</a>
-        <div class="balance-box">
-            R$ <span id="s-val">0,00</span>
-            <span style="background:#242931; padding:2px; border-radius:2px; font-size:10px; cursor:pointer;" onclick="updateDisplay()">🔄</span>
-        </div>
+    <div class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0f121b; border-bottom: 1px solid #242931;">
+    <div style="color: white; font-weight: bold;">
+        Saldo: <span style="color: #00ff00;">R$ 0,00</span>
+    </div>
+    <a href="carteira.html" style="background-color: #f12c4c; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 13px;">
+        DEPOSITAR
+    </a>
     </div>
 
     <div class="container">
@@ -183,4 +184,5 @@
         window.onfocus = updateDisplay; // Atualiza quando você volta de outro jogo
     </script>
 </body>
+
 </html>
