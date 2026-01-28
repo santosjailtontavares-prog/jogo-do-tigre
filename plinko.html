@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blaze - Plinko</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #0f121b; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        
+        .navbar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0f121b; }
+        .logo-text { color: #f12c4c; font-weight: 900; font-size: 24px; }
+        .balance-box { background: #1a1d23; padding: 8px 12px; border-radius: 4px; border: 1px solid #242931; color: #00ff7f; font-weight: bold; }
+
+        #plinko-container {
+            background: #1a1d23; width: 95%; max-width: 400px; height: 380px;
+            margin: 20px 0; border-radius: 12px; position: relative;
+            border: 1px solid #242931; overflow: hidden;
+        }
+        .dot { width: 6px; height: 6px; background: #303743; border-radius: 50%; position: absolute; }
+        .ball { width: 12px; height: 12px; background: #f12c4c; border-radius: 50%; position: absolute; box-shadow: 0 0 10px #f12c4c; z-index: 10; transition: all 0.15s linear; }
+        
+        .targets { display: flex; justify-content: center; gap: 2px; position: absolute; bottom: 10px; width: 100%; padding: 0 5px; }
+        .target { flex: 1; color: white; font-size: 9px; font-weight: bold; text-align: center; padding: 8px 0; border-radius: 4px; }
+        
+        .m-high { background: #f12c4c; } 
+        .m-mid { background: #f59e0b; }  
+        .m-low { background: #7c3aed; }  
+
+        .controls { width: 90%; max-width: 350px; }
+        .label { color: #98a7b5; font-size: 12px; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 15px; background: #1a1d23; border: 1px solid #242931; color: white; border-radius: 8px; margin-bottom: 15px; outline: none; font-size: 16px; }
+        
+        .btn-play { width: 100%; padding: 18px; background: #f12c4c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-play:disabled { opacity: 0.5; }
+        
+        .back-link { margin: 20px 0; color: #98a7b5; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="logo-text">blaze</div>
+        <div class="balance-box">R$ <span id="s-val">0,00</span></div>
+    </div>
+
+    <div id="plinko-container">
+        <div class="targets" id="target-row"></div>
+    </div>
+
+    <div class="controls">
+        <div class="label">Quantia da Aposta (Mín R$ 1,00)</div>
+        <input type="number" id="aposta" value="1.00" min="1.00">
+        
+        <div class="label">Quantidade de Bolas</div>
+        <select id="qtd-bolas">
+            <option value="1">1 Bola</option>
+            <option value="5">5 Bolas</option>
+            <option value="10">10 Bolas</option>
+            <option value="20">20 Bolas</option>
+        </select>
+
+        <button id="btn-jogar" class="btn-play" onclick="startPlinko()">Lançar</button>
+    </div>
+
+    <a href="home.html" class="back-link">← Voltar para a Home</a>
+
+    <script>
+        let saldo = parseFloat(localStorage.getItem('saldo')) || 100.00;
+        const container = document.getElementById('plinko-container');
+        const multis = [10, 5, 2, 1.5, 1.2, 0.5, 1.2, 1.5, 2, 5, 10];
+        let bolasAtivas = 0;
+
+        function updateDisplay() {
+            localStorage.setItem('saldo', saldo.toFixed(2));
+            document.getElementById('s-val').innerText = saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        }
+
+        function setupGame() {
+            const targetRow = document.getElementById('target-row');
+            multis.forEach(m => {
+                const div = document.createElement('div');
+                div.className = `target ${m >= 5 ? 'm-high' : m >= 1.5 ? 'm-mid' : 'm-low'}`;
+                div.innerText = m + 'x';
+                targetRow.appendChild(div);
+            });
+
+            for (let i = 2; i <= 10; i++) {
+                for (let j = 0; j < i; j++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    dot.style.top = (i * 30) + 'px';
+                    dot.style.left = (container.offsetWidth/2 + (j * 26) - (i * 13)) + 'px';
+                    container.appendChild(dot);
+                }
+            }
+        }
+
+        function startPlinko() {
+            const qtd = parseInt(document.getElementById('qtd-bolas').value);
+            const betValue = parseFloat(document.getElementById('aposta').value);
+
+            if (betValue < 1) { alert("Aposta mínima de R$ 1,00!"); return; }
+            if ((betValue * qtd) > saldo) { alert("Saldo insuficiente para todas as bolas!"); return; }
+
+            document.getElementById('btn-jogar').disabled = true;
+            let lancadas = 0;
+
+            const timer = setInterval(() => {
+                dropBall(betValue);
+                lancadas++;
+                if (lancadas >= qtd) {
+                    clearInterval(timer);
+                    setTimeout(() => { document.getElementById('btn-jogar').disabled = false; }, 2000);
+                }
+            }, 200);
+        }
+
+        function dropBall(bet) {
+            saldo -= bet;
+            updateDisplay();
+            bolasAtivas++;
+
+            const ball = document.createElement('div');
+            ball.className = 'ball';
+            ball.style.top = '20px';
+            ball.style.left = (container.offsetWidth/2 - 6) + 'px';
+            container.appendChild(ball);
+
+            let currentTop = 20;
+            let currentLeft = container.offsetWidth/2 - 6;
+            let step = 0;
+
+            const fall = setInterval(() => {
+                step++;
+                currentTop += 30;
+                currentLeft += (Math.random() > 0.5 ? 13 : -13);
+                
+                ball.style.top = currentTop + 'px';
+                ball.style.left = currentLeft + 'px';
+
+                if (step >= 10) {
+                    clearInterval(fall);
+                    const center = container.offsetWidth / 2;
+                    const diff = (currentLeft - center) / 13;
+                    let index = Math.round(diff + 5);
+                    index = Math.max(0, Math.min(index, multis.length - 1));
+
+                    saldo += (bet * multis[index]);
+                    updateDisplay();
+
+                    setTimeout(() => { ball.remove(); bolasAtivas--; }, 300);
+                }
+            }, 100);
+        }
+
+        window.onload = () => { updateDisplay(); setupGame(); };
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blaze - Limbo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #0f121b; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        /* NAVBAR */
+        .navbar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0f121b; border-bottom: 1px solid #1a1d23; }
+        .logo-text { color: #f12c4c; font-weight: 900; font-size: 24px; text-decoration: none; }
+        .balance-box { background: #1a1d23; padding: 8px 12px; border-radius: 4px; border: 1px solid #242931; color: #00ff7f; font-weight: bold; }
+
+        /* ÁREA DO RESULTADO */
+        .display-area { width: 95%; max-width: 500px; height: 200px; background: #1a1d23; margin: 20px 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; border: 1px solid #242931; position: relative; overflow: hidden; }
+        .main-number { font-size: 60px; font-weight: 900; color: #98a7b5; transition: 0.1s; z-index: 2; }
+        .main-number.win { color: #00ff7f; text-shadow: 0 0 20px rgba(0, 255, 127, 0.3); }
+        .main-number.lose { color: #f12c4c; }
+
+        /* PAINEL DE CONTROLE */
+        .controls { width: 95%; max-width: 500px; background: #1a1d23; padding: 20px; border-radius: 12px; border: 1px solid #242931; display: flex; flex-direction: column; gap: 15px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 11px; color: #98a7b5; font-weight: bold; text-transform: uppercase; }
+        input { background: #0f121b; border: 1px solid #242931; color: white; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 16px; outline: none; }
+        
+        .btn-play { background: #f12c4c; color: white; border: none; padding: 18px; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 16px; margin-top: 10px; }
+        .btn-play:active { transform: scale(0.98); }
+
+        /* MENSAGEM DE GANHO */
+        .win-toast { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); background: #00ff7f; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: 900; z-index: 100; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .win-toast.show { transform: translate(-50%, -50%) scale(1); }
+
+        .back-link { margin-top: 30px; color: #98a7b5; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div id="win-msg" class="win-toast">GANHOU R$ <span id="win-val">0.00</span>!</div>
+
+    <div class="navbar">
+        <a href="home.html" class="logo-text">blaze</a>
+        <div class="balance-box">R$ <span id="s-val">0,00</span></div>
+    </div>
+
+    <div class="display-area">
+        <div class="main-number" id="result-display">1.00x</div>
+    </div>
+
+    <div class="controls">
+        <div class="input-group">
+            <label>Quantia da Aposta</label>
+            <input type="number" id="bet-amount" value="1.00" step="0.50">
+        </div>
+        <div class="input-group">
+            <label>Multiplicador Alvo</label>
+            <input type="number" id="target-mult" value="2.00" step="0.10">
+        </div>
+        <button class="btn-play" onclick="playLimbo()">Jogar</button>
+    </div>
+
+    <a href="home.html" class="back-link">← Voltar</a>
+
+    <script>
+        let saldo = parseFloat(localStorage.getItem('saldo')) || 120.00;
+        
+        function updateUI() {
+            document.getElementById('s-val').innerText = saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+            localStorage.setItem('saldo', saldo.toFixed(2));
+        }
+
+        function playLimbo() {
+            const bet = parseFloat(document.getElementById('bet-amount').value);
+            const target = parseFloat(document.getElementById('target-mult').value);
+            const display = document.getElementById('result-display');
+            
+            if (bet > 0 && bet <= saldo && target >= 1.01) {
+                saldo -= bet;
+                updateUI();
+                
+                // Gera o número do Limbo (Lógica de probabilidade real)
+                const rand = Math.random();
+                const result = (0.98 / (1 - rand)).toFixed(2);
+                
+                display.classList.remove('win', 'lose');
+                display.innerText = result + "x";
+
+                if (parseFloat(result) >= target) {
+                    // Ganhou
+                    const profit = bet * target;
+                    saldo += profit;
+                    display.classList.add('win');
+                    
+                    // Mostra o balão verde de vitória
+                    const toast = document.getElementById('win-msg');
+                    document.getElementById('win-val').innerText = profit.toFixed(2);
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                        updateUI();
+                    }, 1500);
+                } else {
+                    // Perdeu
+                    display.classList.add('lose');
+                    updateUI();
+                }
+            } else {
+                alert("Saldo insuficiente ou alvo inválido!");
+            }
+        }
+
+        updateUI();
+    </script>
+</body>
+</html>

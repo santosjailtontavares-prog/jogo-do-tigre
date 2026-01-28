@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Blaze - Home Completa</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #0f121b; color: white; padding-bottom: 90px; }
+        
+        /* NAVBAR */
+        .navbar { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #0f121b; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1a1d23; }
+        .logo-text { color: #f12c4c; font-weight: 900; font-size: 24px; text-decoration: none; }
+        .balance-box { background: #1a1d23; padding: 8px 12px; border-radius: 4px; border: 1px solid #242931; color: #00ff7f; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+
+        .container { padding: 0 15px; }
+
+        /* PAINEL AZUL SUPERIOR */
+        .promo-banner { 
+            width: 100%; 
+            background: #0052ff; 
+            border-radius: 12px; 
+            padding: 20px; 
+            margin: 10px 0 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 82, 255, 0.3);
+        }
+        .promo-banner h2 { font-size: 20px; font-weight: 900; line-height: 1.1; }
+        .promo-banner p { font-size: 13px; font-weight: 500; opacity: 0.9; }
+        .btn-deposito { background: #f12c4c; color: white; border: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; width: fit-content; cursor: pointer; text-transform: uppercase; }
+
+        /* SEÇÕES */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 25px 0 15px; }
+        .section-title { font-size: 13px; color: #98a7b5; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ver-todos { color: #98a7b5; font-size: 12px; text-decoration: none; }
+
+        /* GRID 3 COLUNAS */
+        .game-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        
+        .game-card { text-decoration: none; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; aspect-ratio: 1/1.3; transition: transform 0.1s; }
+        .game-card:active { transform: scale(0.95); }
+        
+        .card-header { background: #242931; color: white; font-size: 9px; font-weight: 900; text-align: center; padding: 6px 0; text-transform: uppercase; }
+        .card-body { flex-grow: 1; display: flex; align-items: center; justify-content: center; font-size: 30px; position: relative; }
+        .card-footer { background: #000; color: #556270; font-size: 8px; text-align: center; padding: 5px 0; }
+
+        /* GRADIENTES */
+        .bg-originais { background: linear-gradient(180deg, #f12c4c 0%, #3e0a13 100%); }
+        .bg-fortuna { background: linear-gradient(180deg, #ff9900 0%, #663300 100%); }
+        .bg-live { background: linear-gradient(180deg, #323a45 0%, #0f121b 100%); border: 1px solid #1a1d23; }
+
+        .live-badge { position: absolute; top: 5px; left: 5px; background: #f12c4c; color: white; font-size: 7px; padding: 2px 4px; border-radius: 2px; font-weight: bold; }
+
+        /* PROVEDORES */
+        .providers-list { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .providers-list::-webkit-scrollbar { display: none; }
+        .provider-circle { min-width: 75px; height: 75px; background: #1a1d23; border: 1px solid #242931; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #98a7b5; text-align: center; font-weight: bold; }
+
+        /* FOOTER MENU */
+        .footer-menu { position: fixed; bottom: 0; width: 100%; background: #0f121b; display: grid; grid-template-columns: repeat(4, 1fr); padding: 12px 0; border-top: 1px solid #1a1d23; z-index: 1000; }
+        .menu-item { text-align: center; font-size: 11px; color: #98a7b5; text-decoration: none; display: flex; flex-direction: column; gap: 5px; }
+        .menu-item.active { color: #f12c4c; }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="home.html" class="logo-text">blaze</a>
+        <div class="balance-box">
+            R$ <span id="s-val">0,00</span>
+            <span style="background:#242931; padding:2px; border-radius:2px; font-size:10px; cursor:pointer;" onclick="updateDisplay()">🔄</span>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="promo-banner">
+            <h2>BÔNUS DE BOAS-VINDAS</h2>
+            <p>Ganhe até R$ 1.000 + 40 Rodadas Grátis nos Originais!</p>
+            <button class="btn-deposito">DEPOSITAR</button>
+        </div>
+
+        <p class="section-title">ORIGINAIS BLAZE</p>
+        <div class="game-grid" style="margin-top: 15px; margin-bottom: 25px;">
+            <a href="double.html" class="game-card">
+                <div class="card-header">DOUBLE</div>
+                <div class="card-body bg-originais">🔴</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+            <a href="mines.html" class="game-card">
+                <div class="card-header">MINES</div>
+                <div class="card-body bg-originais">💣</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+            <a href="dice.html" class="game-card">
+                <div class="card-header">DICE</div>
+                <div class="card-body bg-originais">🎲</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+            <a href="plinko.html" class="game-card">
+                <div class="card-header">PLINKO</div>
+                <div class="card-body bg-originais">🔵</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+            <a href="crash.html" class="game-card">
+                <div class="card-header">CRASH</div>
+                <div class="card-body bg-originais">🚀</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+            <a href="limbo.html" class="game-card">
+                <div class="card-header">LIMBO</div>
+                <div class="card-body bg-originais">✨</div>
+                <div class="card-footer">Blaze</div>
+            </a>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Jogos Fortuna</span>
+            <a href="#" class="ver-todos">Ver Todos ></a>
+        </div>
+        <div class="game-grid">
+            <a href="tiger.html" class="game-card">
+                <div class="card-body bg-fortuna" style="font-size:14px; font-weight:bold;">🐯 TIGER</div>
+                <div class="card-footer">PG Soft</div>
+            </a>
+            <a href="ox.html" class="game-card">
+                <div class="card-body bg-fortuna" style="font-size:14px; font-weight:bold;">🐂 OX</div>
+                <div class="card-footer">PG Soft</div>
+            </a>
+            <a href="rabbit.html" class="game-card">
+                <div class="card-body bg-fortuna" style="font-size:14px; font-weight:bold;">🐰 RABBIT</div>
+                <div class="card-footer">PG Soft</div>
+            </a>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Provedores</span>
+            <a href="#" class="ver-todos">Ver Todos ></a>
+        </div>
+        <div class="providers-list">
+            <div class="provider-circle">PG Soft</div>
+            <div class="provider-circle">Pragmatic</div>
+            <div class="provider-circle">Evolution</div>
+            <div class="provider-circle">Spribe</div>
+            <div class="provider-circle">Hacksaw</div>
+        </div>
+
+        <div class="section-header">
+            <span class="section-title">Casino Ao Vivo</span>
+            <a href="#" class="ver-todos">Ver Todos ></a>
+        </div>
+        <div class="game-grid">
+            <div class="game-card">
+                <div class="card-body bg-live"><span class="live-badge">LIVE</span>🎡</div>
+                <div class="card-footer">Roleta</div>
+            </div>
+            <div class="game-card">
+                <div class="card-body bg-live"><span class="live-badge">LIVE</span>🃏</div>
+                <div class="card-footer">Blackjack</div>
+            </div>
+            <div class="game-card">
+                <div class="card-body bg-live"><span class="live-badge">LIVE</span>🎤</div>
+                <div class="card-footer">Game Shows</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-menu">
+        <a href="#" class="menu-item"><span>☰</span>Menu</a>
+        <a href="#" class="menu-item"><span>🎥</span>Ao Vivo</a>
+        <a href="#" class="menu-item active"><span>🎰</span>Cassino</a>
+        <a href="home.html" class="menu-item"><span>🏠</span>Home</a>
+    </div>
+
+    <script>
+        function updateDisplay() {
+            let saldo = parseFloat(localStorage.getItem('saldo')) || 120.00;
+            document.getElementById('s-val').innerText = saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+        }
+        window.onload = updateDisplay;
+        window.onfocus = updateDisplay; // Atualiza quando você volta de outro jogo
+    </script>
+</body>
+</html>

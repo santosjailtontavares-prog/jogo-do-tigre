@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fortune Tiger - PG SOFT</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; height: 100vh; display: flex; flex-direction: column; overflow: hidden; font-family: sans-serif; }
+        
+        /* BARRA SUPERIOR IGUAL À SUA */
+        .header {
+            background: #1a1111;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        .btn-sair { color: #fff; text-decoration: none; font-weight: bold; font-size: 16px; display: flex; align-items: center; }
+        .saldo-box { 
+            background: #0d1105; 
+            border: 1px solid #cc9900; 
+            color: #26e67b; 
+            padding: 5px 12px; 
+            border-radius: 5px; 
+            font-weight: 900;
+        }
+
+        /* CONTAINER DO JOGO ORIGINAL */
+        #game-container {
+            flex: 1;
+            width: 100%;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="home.html" class="btn-sair">❮ Sair</a>
+        <div class="saldo-box">R$ <span id="display-saldo">131,14</span></div>
+    </div>
+
+    <div id="game-container">
+        <iframe 
+            src="https://demogamesfree.pragmaticplay.net/gs2c/openGame.do?gameSymbol=vs20pfire&lang=pt&cur=BRL" 
+            allow="autoplay; fullscreen; microphone">
+        </iframe>
+    </div>
+
+    <script>
+        // Sincroniza o saldo da sua Home com a barra superior
+        function atualizarSaldo() {
+            let saldoFinal = localStorage.getItem('saldo') || "131,14";
+            document.getElementById('display-saldo').innerText = saldoFinal;
+        }
+        atualizarSaldo();
+    </script>
+</body>
+</html>
