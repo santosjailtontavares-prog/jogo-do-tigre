@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depósito PIX - Jogo do Tigre</title>
+    <style>
+        body { background-color: #1a1a1a; color: white; font-family: sans-serif; text-align: center; padding: 20px; }
+        .box-saldo { background: #222; border: 2px solid #ffcc00; padding: 20px; border-radius: 15px; margin: 20px 0; }
+        .valor { font-size: 35px; color: #00ff00; font-weight: bold; }
+        .pix-area { display: none; background: #333; padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed #ffcc00; }
+        .code { word-break: break-all; font-family: monospace; color: #ffcc00; margin: 10px 0; }
+        .btn { display: block; width: 100%; padding: 15px; margin: 10px 0; border-radius: 8px; border: none; font-weight: bold; font-size: 18px; cursor: pointer; }
+        .btn-pix { background: #00ff00; color: black; }
+    </style>
+</head>
+<body>
+    <h2>💰 Depósito Via PIX</h2>
+    
+    <div class="box-saldo">
+        <p>Seu Saldo Atual</p>
+        <div class="valor">R$ 0,00</div>
+    </div>
+
+    <p>Digite o valor do depósito:</p>
+    <input type="number" id="valorInput" placeholder="R$ 50,00" style="padding: 10px; border-radius: 5px; width: 80%; border: none;">
+
+    <button class="btn btn-pix" onclick="gerarPix()">GERAR CÓDIGO PIX</button>
+
+    <div id="pixArea" class="pix-area">
+        <p>Copia e Cola gerado:</p>
+        <div class="code" id="pixCodigo">pix-id-exemplo-12345-tigre-pagamentos</div>
+        <button onclick="copiarPix()" style="background:#ffcc00; border:none; padding:10px; border-radius:5px; font-weight:bold;">COPIAR CÓDIGO</button>
+    </div>
+
+    <script>
+        function gerarPix() {
+            let valor = document.getElementById('valorInput').value;
+            if(valor < 1) {
+                alert("Digite um valor válido!");
+                return;
+            }
+            document.getElementById('pixArea').style.display = 'block';
+            alert("Código PIX para R$ " + valor + " gerado com sucesso!");
+        }
+
+        function copiarPix() {
+            alert("Código PIX copiado! Pague no seu banco para o saldo cair na conta.");
+        }
+    </script>
+
+    <br><br>
+    <a href="index.html" style="color: #ffcc00; text-decoration: none;">← Voltar aos Jogos</a>
+</body>
+</html>
